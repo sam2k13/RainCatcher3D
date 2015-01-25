@@ -13,8 +13,10 @@ public class FPController : MonoBehaviour {
 	float verticalVelocity = 0;
 	public float jumpSpeed = 5;
 	CharacterController cc;
+	private Vector3 idleAcceleration;
 	// Use this for initialization
 	void Start () {
+		idleAcceleration = new Vector3 (0, 0, 0);
 		originalSpeeed = speed;
 		//Screen.lockCursor = true;
 		cc = GetComponent<CharacterController>();
@@ -36,8 +38,8 @@ public class FPController : MonoBehaviour {
 
 		//movement
 
-		float forwardSpeed = -Input.acceleration.z * speed;//Input.GetAxis("Vertical") * speed;
-		float sideSpeed = Input.acceleration.x * speed;//Input.GetAxis("Horizontal") * speed;
+		float forwardSpeed = -(Input.acceleration.z - idleAcceleration.z ) * speed;//Input.GetAxis("Vertical") * speed;
+		float sideSpeed = (Input.acceleration.x - idleAcceleration.x) * speed;//Input.GetAxis("Horizontal") * speed;
 
 		verticalVelocity += Physics.gravity.y * Time.deltaTime;
 		if(Input.GetButtonDown("Jump") && cc.isGrounded){
@@ -58,9 +60,13 @@ public class FPController : MonoBehaviour {
 
 
 	}
+	public void Calibrate(){
+		idleAcceleration = Input.acceleration;
+	
+	}
 	public void SetMouseSpeed(float speed){
 		mouseSensitivity = speed;
 
 	}
-	public void Calibrate(){}
+
 }
